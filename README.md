@@ -33,7 +33,7 @@ sudo apt-get install rsync
 #### RPi_RootFS files
 filename|Descrption
 |----------------|---------------|
-|rpi_rootfs.py |main python script, you need two argument for this script,  "Usage: ./rpi_rootfs.py <user@hostname> <rootfs path>" |
+|rpi_rootfs.py |main python script, you need two argument for this script,  "Usage: ./rpi_rootfs.py <<user@hostname>> \<rootfs path> " |
 |rpi_rootfs_exclude.txt| exclude pattern file during sync|
 
 #### Making Raspberry PI sysroot

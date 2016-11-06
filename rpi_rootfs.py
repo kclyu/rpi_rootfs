@@ -13,7 +13,7 @@ rsync_include = ['lib','usr','opt/vc']
 
 ## Rsync Options
 rsync_cmd = ['/usr/bin/rsync']
-rsync_options = ['-rRlvu', '--stats',  '--delete-after', '--include=/usr/share/pkg*']
+rsync_options = ['-rRlvu', '--stats',  '--delete-after', '--include=usr/share/pkg*', '--include=etc/ld.so.*' ]
 
 ################################################################################
 #
@@ -131,6 +131,44 @@ def process_pkgconfig_link(path):
 
 ################################################################################
 #
+# making include/sys links
+#
+################################################################################
+
+def process_sys_include_link(path):
+    # 
+    sys_include_link_path  = os.path.abspath(path)+'/usr/include/arm-linux-gnueabihf/sys'
+    if(os.path.exists(sys_include_link_path)):
+        for subdir, dirs, files in os.walk(sys_include_link_path):
+            print ("SUBDIR : %s" % subdir )
+            print ("SUBDIR : %s" % dirs )
+            for f in files:
+                filep = os.path.join(subdir, f)
+                target_sys_include = "../arm-linux-gnueabihf/sys/" + f
+                link_sys_include =  os.path.abspath(path) + "/usr/include/sys/" + f
+                print("source %s target %s" % (target_sys_include, link_sys_include))
+                symlink_force(target_sys_include, link_sys_include)
+    else:
+        sys.stderr.write('ERROR: pkg-config does not exist : %r\n\n' % pkgconfig_path)
+
+def process_include_link(path):
+    include_link_path  = os.path.abspath(path)+'/usr/include/arm-linux-gnueabihf'
+    if(os.path.exists(include_link_path)):
+        for subdir, dirs, files in os.walk(include_link_path):
+            print ("SUBDIR : %s" % subdir )
+            print ("DIRS : %s" % dirs )
+            print ("FILES : %s" % dirs )
+            #for f in files:
+            #    filep = os.path.join(subdir, f)
+            #    target_sys_include = "../arm-linux-gnueabihf/sys/" + f
+            #    link_sys_include =  os.path.abspath(path) + "/usr/include/sys/" + f
+            #    print("source %s target %s" % (target_sys_include, link_sys_include))
+            #    #symlink_force(target_sys_include, link_sys_include)
+    else:
+        sys.stderr.write('ERROR: pkg-config does not exist : %r\n\n' % pkgconfig_path)
+
+################################################################################
+#
 # GNU linker script fixing
 # This function will search the entire rootfs path with 'grep' command.
 #
@@ -201,6 +239,10 @@ def main(argv):
         sys.stderr.write('RPi RootFS does not support this platform: %r\n\n' % sys.platform)
         return 1
 
+    #process_sys_include_link(argv[2])
+    #process_include_link(argv[2])
+    #return 1
+
     print("################################################################################")
     print("###\n### rootfs syncing from %s\n###" % argv[1] )
     print("################################################################################")
@@ -223,6 +265,11 @@ def main(argv):
     print("###\n### fixing ld scripts absolute path to relative path \n###" )
     print("################################################################################")
     process_ld_scripts(argv[2])
+
+    #print("################################################################################")
+    #print("###\n### linking include/sys file  \n###" )
+    #print("################################################################################")
+    #process_sys_include_link(argv[2])
 
 if __name__ == '__main__':
     sys.exit(main(sys.argv))

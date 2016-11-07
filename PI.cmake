@@ -1,9 +1,9 @@
-cmake_minimum_required( VERSION 2.6.3 )
 ##
 ## Raspberry PI cmake toolchain 
 ##
 ## Usage : cmake -DCMAKE_TOOLCHAIN_FILE=~/Workspace/rpi_rootfs/PI.cmake  -DCMAKE_BUILD_TYPE=Debug ..
 
+cmake_minimum_required(VERSION 3.0.0 FATAL_ERROR)
 
 SET(CMAKE_SYSTEM_NAME Linux)
 SET(CMAKE_SYSTEM_VERSION 1)
@@ -29,10 +29,13 @@ SET(CMAKE_FIND_ROOT_PATH ${CMAKE_SYSROOT})
 SET(WARNINGS "-Wall -Wextra -Wcast-qual -Wconversion -Wformat=2 -Winit-self -Winvalid-pch -Wmissing-form    at-attribute -Wmissing-include-dirs -Wpacked -Wredundant-decls" )
 
 ## Additional Flags
-SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} --sysroot=${CMAKE_SYSROOT}" CACHE INTERNAL "" FORCE)
-SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fno-strict-aliasing"  CACHE INTERNAL "" FORCE)
+SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS}" CACHE INTERNAL "" FORCE)
+SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}"  CACHE INTERNAL "" FORCE)
 SET(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -ldl"  CACHE INTERNAL "" FORCE)
 
+
+##
+## Compiler Binary 
 # rpi_tools gcc 4.7.1
 #SET(RPI_TOOLS_BASE /opt/rpi_tools/arm-bcm2708/arm-bcm2708-linux-gnueabi)
 #SET(BIN_PREFIX arm-bcm2708-linux-gnueabi)
@@ -62,7 +65,9 @@ SET (CMAKE_STRIP ${RPI_TOOLS_BASE}/bin/${BIN_PREFIX}-strip
 ##
 SET (BOOST_ROOT  ${CMAKE_SYSROOT}/usr/local/boost)
 SET (BOOST_LIBRARYDIR  ${CMAKE_SYSROOT}/usr/local/boost/lib)
+
 add_definitions("-DBOOST_COROUTINES_NO_DEPRECATION_WARNING")
+add_compile_options(-mfpu=neon-vfpv4 -mfloat-abi=hard -funsafe-math-optimizations)
 
 SET(OPENSSL_FOUND TRUE)
 SET(OPENSSL_ROOT_DIR ${CMAKE_SYSROOT}/usr/include/openssl)
@@ -72,14 +77,13 @@ SET(OPENSSL_LIBRARIES
     "${CMAKE_SYSROOT}/usr/lib/arm-linux-gnueabihf/libcrypto.a"
     )
 
-##SET (PROJECT_INCLUDE ${CMAKE_SYSROOT}/usr/include/arm-linux-gnueabihf)
+## dump some variables 
+#MESSAGE( STATUS "CMAKE_C_FLAGS : " ${CMAKE_C_FLAGS} )
+#MESSAGE( STATUS "CMAKE_CXX_FLAGS : " ${CMAKE_CXX_FLAGS} )
+#MESSAGE( STATUS "CMAKE_EXE_LINKER_FLAGS : " ${CMAKE_EXE_LINKER_FLAGS} )
 
-#include_directories(${PROJECT_INCLUDE})
-#set(CMAKE_SHARED_LINKER_FLAGS "-Wl,--no-undefined -Wl,--gc-sections -Wl,-z,noexecstack -Wl,-z,relro -Wl,-z,now -L${CMAKE_SYSROOT}/usr/lib/usr/lib/arm-linux-gnueabihf/ ${CMAKE_SHARED_LINKER_FLAGS}")
-#set(CMAKE_MODULE_LINKER_FLAGS "-Wl,--no-undefined -Wl,--gc-sections -Wl,-z,noexecstack -Wl,-z,relro -Wl,-z,now -L${CMAKE_SYSROOT}/usr/lib/usr/lib/arm-linux-gnueabihf/ ${CMAKE_MODULE_LINKER_FLAGS}")
-#set(CMAKE_EXE_LINKER_FLAGS    "-Wl,--no-undefined -Wl,--gc-sections -Wl,-z,noexecstack -Wl,-z,relro -Wl,-z,now -L${CMAKE_SYSROOT}/usr/lib/usr/lib/arm-linux-gnueabihf/ ${CMAKE_EXE_LINKER_FLAGS}")
-
-
+##
+##
 SET(CMAKE_FIND_ROOT_PATH_MODE_PROGRAM NEVER)
 SET(CMAKE_FIND_ROOT_PATH_MODE_LIBRARY ONLY)
 SET(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE ONLY)

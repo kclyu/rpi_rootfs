@@ -6,7 +6,6 @@
 cmake_minimum_required(VERSION 3.0.0 FATAL_ERROR)
 
 SET(CMAKE_SYSTEM_NAME Linux)
-SET(CMAKE_SYSTEM_VERSION 1)
 SET(CMAKE_SYSTEM_PROCESSOR arm)
 
 ## Target Sysroot environment
@@ -14,7 +13,7 @@ SET(CMAKE_SYSROOT $ENV{HOME}/Workspace/rpi_rootfs )
 SET(CMAKE_FIND_ROOT_PATH ${CMAKE_SYSROOT})
 
 
-## Flags
+## Adding manual flags
 #SET( CMAKE_CXX_FLAGS           "-std=c++11"                        CACHE STRING "c++ flags" )
 #SET( CMAKE_C_FLAGS             ""                        CACHE STRING "c flags" )
 #SET( CMAKE_CXX_FLAGS_RELEASE   "-O3 -DNDEBUG"            CACHE STRING "c++ Release flags" )
@@ -26,12 +25,12 @@ SET(CMAKE_FIND_ROOT_PATH ${CMAKE_SYSROOT})
 #SET( CMAKE_EXE_LINKER_FLAGS    "-Wl,-z,nocopyreloc"      CACHE STRING "executable linker flags" )
 
 ##
-SET(WARNINGS "-Wall -Wextra -Wcast-qual -Wconversion -Wformat=2 -Winit-self -Winvalid-pch -Wmissing-form    at-attribute -Wmissing-include-dirs -Wpacked -Wredundant-decls" )
+#SET(WARNINGS "-Wall -Wextra -Wcast-qual -Wconversion -Wformat=2 -Winit-self -Winvalid-pch -Wmissing-form    at-attribute -Wmissing-include-dirs -Wpacked -Wredundant-decls" )
 
 ## Additional Flags
-SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS}" CACHE INTERNAL "" FORCE)
-SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}"  CACHE INTERNAL "" FORCE)
-SET(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -ldl"  CACHE INTERNAL "" FORCE)
+#SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS}" CACHE INTERNAL "" FORCE)
+#SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}"  CACHE INTERNAL "" FORCE)
+SET(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${CMAKE_DL_LIBS}"  CACHE INTERNAL "" FORCE)
 
 
 ##
@@ -76,6 +75,8 @@ SET(OPENSSL_LIBRARIES
     "${CMAKE_SYSROOT}/usr/lib/arm-linux-gnueabihf/libssl.a"
     "${CMAKE_SYSROOT}/usr/lib/arm-linux-gnueabihf/libcrypto.a"
     )
+
+OPTION(BUILD_SHARED_LIBS "Build shared Libraries." OFF)
 
 ## dump some variables 
 #MESSAGE( STATUS "CMAKE_C_FLAGS : " ${CMAKE_C_FLAGS} )

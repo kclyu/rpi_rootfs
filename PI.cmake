@@ -2,6 +2,18 @@
 ## Raspberry PI cmake toolchain 
 ##
 ## Usage : cmake -DCMAKE_TOOLCHAIN_FILE=~/Workspace/rpi_rootfs/PI.cmake  -DCMAKE_BUILD_TYPE=Debug ..
+## 
+## 
+## 
+## Poco Library Build example:
+##         cmake -DCMAKE_TOOLCHAIN_FILE=~/Workspace/rpi_rootfs/PI.cmake  -DCMAKE_BUILD_TYPE=Debug .. -DENABLE_MONGODB=OFF -DENABLE_DATA=OFF -DPOCO_STATIC=ON
+##
+## websocketpp Build example:
+##          cmake -DCMAKE_TOOLCHAIN_FILE=~/Workspace/rpi_rootfs/PI.cmake  -DCMAKE_BUILD_TYPE=Debug .. -DBUILD_EXAMPLES=ON -DENABLE_CPP11=ON
+##
+## cpprestsdk Build example:
+##          cmake -DCMAKE_TOOLCHAIN_FILE=~/Workspace/rpi_rootfs/PI.cmake  -DCMAKE_BUILD_TYPE=Debug ..
+##
 
 cmake_minimum_required(VERSION 3.0.0 FATAL_ERROR)
 
@@ -31,7 +43,6 @@ SET(CMAKE_FIND_ROOT_PATH ${CMAKE_SYSROOT})
 #SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS}" CACHE INTERNAL "" FORCE)
 #SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}"  CACHE INTERNAL "" FORCE)
 #SET(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${CMAKE_DL_LIBS}"  CACHE INTERNAL "" FORCE)
-#SET(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -ldl}"  CACHE INTERNAL "" FORCE)
 SET(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -ldl"  CACHE INTERNAL "" FORCE)
 
 

@@ -21,6 +21,7 @@ celerybeat-schedule
 .env
 
 # Raspberry Pi binary directory
+etc/
 lib/
 opt/
 usr/

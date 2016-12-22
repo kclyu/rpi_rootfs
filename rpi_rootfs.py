@@ -7,13 +7,16 @@ import os
 import subprocess
 import sys
 import re
+import errno
 
 ## Syncing Directory/File Pattern
-rsync_include = ['lib','usr','opt/vc']
+rsync_include = ['etc/', 'lib/','usr/','opt/vc']
 
 ## Rsync Options
 rsync_cmd = ['/usr/bin/rsync']
-rsync_options = ['-rRlvu', '--stats',  '--delete-after', '--include=usr/share/pkg*', '--include=etc/ld.so.*' ]
+#rsync_options = ['-rRlvu', '--stats',  '--delete-after', '--include=etc/ld.so.*', \
+#        '--include=usr/share/pkg*' ]
+rsync_options = ['-rRlvu', '--stats',  '--delete-after' ]
 
 ################################################################################
 #
@@ -54,9 +57,11 @@ def rsync_get_include_option(user):
 #
 def process_rsync_rootfs(user, path):
     # Building rsync command line
-    rsync_full_command = rsync_cmd + rsync_options  + ['--exclude-from=rpi_rootfs_exclude.txt'] \
-            + [rsync_get_include_option(user)] + [path]
-    #print(rsync_full_command)
+    rsync_full_command = rsync_cmd + rsync_options  + \
+            ["--include-from=rsync_include_list.txt"] + \
+            ["--exclude-from=rsync_exclude_list.txt"] + \
+            [rsync_get_include_option(user)] + [path]
+    print(rsync_full_command)
     ret = subprocess.call(rsync_full_command, shell=False)
     if ret != 0:
         print("Rsync error : %s" % rsync_err_msg( ret) )
@@ -112,7 +117,7 @@ def symlink_force(target, link_name):
             os.remove(link_name)
             os.symlink(target, link_name)
         else:
-            raise e
+            print("Error: %s -- target:\"%s\", link_name:\"%s\"" % (e, target, link_name) )
 
 def process_pkgconfig_link(path):
     # 
@@ -126,6 +131,7 @@ def process_pkgconfig_link(path):
                 link_packageconfig =  os.path.abspath(path) + "/usr/share/pkgconfig/" + f
                 print("source %s target %s" % (target_packageconfig, link_packageconfig))
                 symlink_force(target_packageconfig, link_packageconfig)
+                
     else:
         sys.stderr.write('ERROR: pkg-config does not exist : %r\n\n' % pkgconfig_path)
 

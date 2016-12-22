@@ -14,6 +14,11 @@
 ## cpprestsdk Build example:
 ##          cmake -DCMAKE_TOOLCHAIN_FILE=~/Workspace/rpi_rootfs/PI.cmake  -DCMAKE_BUILD_TYPE=Debug ..
 ##
+## libwebsockets Build example:
+##          cmake -DCMAKE_TOOLCHAIN_FILE=~/Workspace/rpi_rootfs/PI.cmake  -DCMAKE_BUILD_TYPE=Debug ..  -DLWS_WITH_SHARED=OFF
+##          cmake -DCMAKE_TOOLCHAIN_FILE=~/Workspace/rpi_rootfs/PI.cmake  -DCMAKE_BUILD_TYPE=Debug .. -DLWS_WITH_SHARED=OFF -DLWS_WITH_LIBUV=OFF -DLWS_SSL_CLIENT_USE_OS_CA_CERTS=OFF -DLWS_WITHOUT_DAEMONIZE=OFF -DLWS_WITH_HTTP2=ON  -DLWS_SSL_SERVER_WITH_ECDH_CERT=ON
+##
+##
 
 cmake_minimum_required(VERSION 3.0.0 FATAL_ERROR)
 
@@ -83,11 +88,13 @@ add_compile_options(-mfpu=neon-vfpv4 -mfloat-abi=hard -funsafe-math-optimization
 
 SET(OPENSSL_FOUND TRUE)
 SET(OPENSSL_ROOT_DIR ${CMAKE_SYSROOT}/usr/include/openssl)
-SET(OPENSSL_INCLUDE_DIR "${CMAKE_SYSROOT}/usr/include/arm-linux-gnueabihf")
+SET(OPENSSL_INCLUDE_DIRS
+    "${CMAKE_SYSROOT}/usr/include/openssl" 
+    "${CMAKE_SYSROOT}/usr/include/arm-linux-gnueabihf" )
 SET(OPENSSL_LIBRARIES
     "${CMAKE_SYSROOT}/usr/lib/arm-linux-gnueabihf/libssl.a"
-    "${CMAKE_SYSROOT}/usr/lib/arm-linux-gnueabihf/libcrypto.a"
-    )
+    "${CMAKE_SYSROOT}/usr/lib/arm-linux-gnueabihf/libcrypto.a" )
+
 
 OPTION(BUILD_SHARED_LIBS "Build shared Libraries." OFF)
 

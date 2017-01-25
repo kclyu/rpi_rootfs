@@ -47,7 +47,20 @@ Usage: ./rpi_rootfs.py <user@hostname> <rootfs path>
 #./rpi_rootfs.py pi@your_pi_address ./
 ```
 
+#### Using gcc in rpi_rootfs
+Rpi_rootfs includes gcc for Raspberry PI cross compile. To do so, add "/opt/rpi_rootfs/tools/arm-linux-gnueabihf/bin" to your PATH.
 
+```
+/opt/rpi_rootfs/tools/arm-linux-gnueabihf/bin/arm-linux-gnueabihf-gcc -v
+Using built-in specs.
+COLLECT_GCC=/opt/rpi_rootfs/tools/arm-linux-gnueabihf/bin/arm-linux-gnueabihf-gcc
+COLLECT_LTO_WRAPPER=/opt/rpi_rootfs/tools/arm-linux-gnueabihf/libexec/gcc/arm-linux-gnueabihf/4.9.4/lto-wrapper
+Target: arm-linux-gnueabihf
+Configured with: /home/kclyu/Workspace/cross/.build/src/gcc-linaro-4.9-2015.06/configure --build=x86_64-build_pc-linux-gnu --host=x86_64-build_pc-linux-gnu --target=arm-linux-gnueabihf --prefix=/opt/rpi_rootfs/tools/arm-linux-gnueabihf --with-sysroot=/opt/rpi_rootfs/tools/arm-linux-gnueabihf/arm-linux-gnueabihf/sysroot --enable-languages=c,c++ --with-arch=armv6 --with-tune=arm1176jz-s --with-fpu=vfp --with-float=hard --with-pkgversion='crosstool-NG crosstool-ng-1.22.0-248-gdf5a341 - Linaro GCC 2015.06' --with-bugurl=https://bugs.launchpad.net/gcc-linaro --disable-__cxa_atexit --disable-libmudflap --enable-libgomp --disable-libssp --enable-libquadmath --enable-libquadmath-support --disable-libsanitizer --with-gmp=/home/kclyu/Workspace/cross/.build/arm-linux-gnueabihf/buildtools --with-mpfr=/home/kclyu/Workspace/cross/.build/arm-linux-gnueabihf/buildtools --with-mpc=/home/kclyu/Workspace/cross/.build/arm-linux-gnueabihf/buildtools --with-isl=/home/kclyu/Workspace/cross/.build/arm-linux-gnueabihf/buildtools --with-cloog=/home/kclyu/Workspace/cross/.build/arm-linux-gnueabihf/buildtools --enable-lto --with-host-libstdcxx='-static-libgcc -Wl,-Bstatic,-lstdc++,-Bdynamic -lm' --enable-threads=posix --disable-libstdcxx-pch --enable-linker-build-id --with-linker-hash-style=gnu --enable-plugin --enable-gold --disable-multilib --with-local-prefix=/opt/rpi_rootfs/tools/arm-linux-gnueabihf/arm-linux-gnueabihf/sysroot --enable-long-long --with-arch=armv6 --with-float=hard --with-fpu=vfp --enable-multiarch
+Thread model: posix
+gcc version 4.9.4 20150629 (prerelease) (crosstool-NG crosstool-ng-1.22.0-248-gdf5a341 - Linaro GCC 2015.06) 
+
+```
 #### Rpi_rootfs log example 
 For my case, the log message was over 9000 lines.
 

@@ -48,7 +48,7 @@ Usage: ./rpi_rootfs.py <user@hostname> <rootfs path>
 ```
 
 #### Using gcc in rpi_rootfs
-Rpi_rootfs includes gcc for Raspberry PI cross compile. To do so, add "/opt/rpi_rootfs/tools/arm-linux-gnueabihf/bin" to your PATH.
+Rpi_rootfs includes gcc for Raspberry PI cross compile. To do so, you need to ungzip tools_gcc_4.9.4.tar.gz and add "/opt/rpi_rootfs/tools/arm-linux-gnueabihf/bin" to your PATH.
 
 ```
 /opt/rpi_rootfs/tools/arm-linux-gnueabihf/bin/arm-linux-gnueabihf-gcc -v

@@ -1,7 +1,16 @@
 # rpi_rootfs
 This python script will create Raspberry PI rootfs(sysroot) to cross-compile WebRTC native-package in Ubuntu Linux.
 
+## Note about downloading tools_gcc_4.9.4.tar.gz
+**Git LFS currently has a monthly download limit. If you are having trouble downloading, please go to google drive file link below. ( You may get a warning message that "file size is too large to scan for viruses" and "You can not 'Preview'".**
+
+|URL|SHA256sum|
+|----------------|---------------|
+|[tools_gcc-4.9.4.tar.gz](https://drive.google.com/open?id=0B4FN-EnejHTaLWVILVFkVTZteWM)|99e0aa822ff8bcdd3bbfe978466f2bed281001553f3b9c295eba2d6ed636d6c2|
+
+
 ## Required package in Raspberry PI
+
 
 #### Package for Rsync 
 ```

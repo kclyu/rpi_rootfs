@@ -3,20 +3,27 @@
 ##
 ## Usage : cmake -DCMAKE_TOOLCHAIN_FILE=~/Workspace/rpi_rootfs/PI.cmake  -DCMAKE_BUILD_TYPE=Debug ..
 ## 
-## 
-## 
+############################
 ## Poco Library Build example:
 ##         cmake -DCMAKE_TOOLCHAIN_FILE=~/Workspace/rpi_rootfs/PI.cmake  -DCMAKE_BUILD_TYPE=Debug .. -DENABLE_MONGODB=OFF -DENABLE_DATA=OFF -DPOCO_STATIC=ON
 ##
+############################
 ## websocketpp Build example:
 ##          cmake -DCMAKE_TOOLCHAIN_FILE=~/Workspace/rpi_rootfs/PI.cmake  -DCMAKE_BUILD_TYPE=Debug .. -DBUILD_EXAMPLES=ON -DENABLE_CPP11=ON
 ##
 ## cpprestsdk Build example:
 ##          cmake -DCMAKE_TOOLCHAIN_FILE=~/Workspace/rpi_rootfs/PI.cmake  -DCMAKE_BUILD_TYPE=Debug ..
 ##
+############################
 ## libwebsockets Build example:
 ##          cmake -DCMAKE_TOOLCHAIN_FILE=~/Workspace/rpi_rootfs/PI.cmake  -DCMAKE_BUILD_TYPE=Debug ..  -DLWS_WITH_SHARED=OFF
 ##          cmake -DCMAKE_TOOLCHAIN_FILE=~/Workspace/rpi_rootfs/PI.cmake  -DCMAKE_BUILD_TYPE=Debug .. -DLWS_WITH_SHARED=OFF -DLWS_WITH_LIBUV=OFF -DLWS_SSL_CLIENT_USE_OS_CA_CERTS=OFF -DLWS_WITHOUT_DAEMONIZE=OFF -DLWS_WITH_HTTP2=ON  -DLWS_SSL_SERVER_WITH_ECDH_CERT=ON
+##
+##
+############################
+## OpenCV 3.x Build example:
+##
+## cmake -DCMAKE_TOOLCHAIN_FILE=~/Workspace/rpi_rootfs/PI.cmake  .. -DENABLE_CXX11=ON -DENABLE_NEON=ON -DDENABLE_VFPV3=ON -DWITH_PNG=ON -DWITH_TBB=ON -DWITH_TIFF=ON -DWITH_OPENGL=ON
 ##
 ##
 
@@ -28,6 +35,11 @@ SET(CMAKE_SYSTEM_PROCESSOR arm)
 ## Target Sysroot environment
 SET(CMAKE_SYSROOT $ENV{HOME}/Workspace/rpi_rootfs )
 SET(CMAKE_FIND_ROOT_PATH ${CMAKE_SYSROOT})
+
+## Add rpath flags for OpenCV
+set(CMAKE_LIBRARY_ARCHITECTURE arm-linux-gnueabihf)
+set(CMAKE_EXE_LINKER_FLAGS "-Wl,-rpath-link=${CMAKE_SYSROOT}/lib/${CMAKE_LIBRARY_ARCHITECTURE}:${CMAKE_SYSROOT}/usr/lib/${CMAKE_LIBRARY_ARCHITECTURE}")
+set(CMAKE_MODULE_LINKER_FLAGS "-Wl,-rpath-link=${CMAKE_SYSROOT}/lib/${CMAKE_LIBRARY_ARCHITECTURE}:${CMAKE_SYSROOT}/usr/lib/${CMAKE_LIBRARY_ARCHITECTURE}")
 
 
 ## Adding manual flags
@@ -108,5 +120,6 @@ OPTION(BUILD_SHARED_LIBS "Build shared Libraries." OFF)
 SET(CMAKE_FIND_ROOT_PATH_MODE_PROGRAM NEVER)
 SET(CMAKE_FIND_ROOT_PATH_MODE_LIBRARY ONLY)
 SET(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE ONLY)
+SET(CMAKE_FIND_ROOT_PATH_MODE_PACKAGE ONLY)
 
 

@@ -39,8 +39,8 @@ make -j 4
 mkdir -p ~/Workspace/ffmpeg
 git clone git://git.videolan.org/x264
 cd x264
-./configure --host=arm-linux-gnueabihf --disable-asm --enable-static --cross-prefix=arm-linux-gnueabihf- --prefix=/opt/rpi_rootfs --sysroot=/opt/rpi_rootfs 
-# library and executable will be placed in /opt/rpi_rootfs
+# --disable-asm is not required
+./configure --host=arm-linux-gnueabihf --enable-static --cross-prefix=arm-linux-gnueabihf- --prefix=/opt/rpi_rootfs --sysroot=/opt/rpi_rootfs  --extra-cflags="-march=armv7-a -mfloat-abi=hard -mtune=cortex-a7 -mfpu=neon"
 make install
 #
 # ffmpeg clone and compile
@@ -49,7 +49,7 @@ cd ~/Workspace/ffmpeg
 git clone git://source.ffmpeg.org/ffmpeg.git
 cd ffmpeg
 # --enable-nonfree options is not used for distribute the binary
-./configure --cross-prefix=arm-linux-gnueabihf- --prefix=/opt/rpi_rootfs --sysroot=/opt/rpi_rootfs --arch=armv6 --target-os=linux --enable-gpl --enable-libx264  --extra-cflags="-I/opt/rpi_rootfs/include" --extra-ldflags="-L/opt/rpi_rootfs/lib" --extra-libs="-lx264 -lpthread -lm -ldl"
+./configure --cross-prefix=arm-linux-gnueabihf- --prefix=/opt/rpi_rootfs --sysroot=/opt/rpi_rootfs --arch=arm --target-os=linux --enable-gpl --enable-libx264  --extra-cflags="-march=armv7-a -mfloat-abi=hard -mtune=cortex-a7 -mfpu=neon -I/opt/rpi_rootfs/include" --extra-ldflags="-L/opt/rpi_rootfs/lib" --extra-libs="-lx264 -lpthread -lm -ldl"
 # running 4 parallel compile process
 make -j 4
 ```

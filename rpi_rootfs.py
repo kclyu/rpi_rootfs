@@ -187,11 +187,19 @@ def inplace_change(filename, old_string, new_string):
             print '"{old_string}" not found in {filename}.'.format(**locals())
             return
 
-    # Safely write the changed content, if found in the file
-    with open(filename, 'w') as f:
-        print 'Changing "{old_string}" to "{new_string}" in {filename}'.format(**locals())
-        s = s.replace(old_string, new_string)
-        f.write(s)
+    try:
+        # Safely write the changed content, if found in the file
+        with open(filename, 'w') as f:
+            print 'Changing "{old_string}" to "{new_string}" in {filename}'.format(**locals())
+            s = s.replace(old_string, new_string)
+            f.write(s)
+    except OSError, e:
+        print("Error: %s -- target:\"%s\"" % (e, filename) )
+        return
+    # TODO: need to handle permission error 
+    except IOError, e:
+        print("Error: %s -- target:\"%s\"" % (e, filename) )
+        return
 
 
 def fix_process_ld_scripts(path, filename):
@@ -201,6 +209,7 @@ def fix_process_ld_scripts(path, filename):
 
     with open(filename) as fstream:
         file_contents = fstream.readlines()
+
 
     #
     # Check whether this file is GNU linker script

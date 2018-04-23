@@ -1,37 +1,10 @@
-# rpi_rootfs
-This repo provides a python script that takes the necessary files from the running Raspberry Pi and uses rsync to fetch the files and make the Root FS for the cross compile environment. In addition, it provides a link to download custom compied gcc for use with Ubuntu.
+# RootFS for Raspberry PI
+This Repo creates a Cross Compile environment for Raspberry PI by generating Root FS for Raspberry PI on Ubuntu Linux using python.
+This Repo is used to cross compile the WebRTC native code package for use with Rpi-WebRTC-Streamer. For an example of compiling OpenCV and ffmpeg, see the `Cross Compiling Examples` section below.
 
-## Required package in Raspberry PI
+This Repo provide google Drive Link to download Custom Compiled GCC. If you are not familiar with cross compile and do not have your own cross compile environment, please download and use GCC from `Custom Compiled GCC for Raspberry PI` below.
 
-```
-sudo apt-get update && sudo apt-get upgrade
-sudo apt-get install rsync
-```
-
-## Custom Compiled GCC for Raspberry PI
-
-```
-mkdir -p ~/Workspace
-git clone https://github.com/kclyu/rpi_rootfs
-cd rpi_rootfs
-# (Download Custom Compiled GCC) # note1
-mv ~/Downloads/tools_gcc_4.9.4.tar.gz  .
-tar xvzf tools_gcc_4.9.4.tar.gz  # note 2
-cd /opt
-sudo ln -sf ~/Workspace/rpi_rootfs
-export PATH=/opt/rpi_rootfs/tools/arm-linux-gnueabihf/bin:$PATH
-```
-*Note 1: Custom Compiled GCC : Please click this tools_gcc-4.9.4.tar.gz link to download it. Because of the large file size, google drive link is available for download. You may get a warning message that "file size is too large to scan for viruses" and "You can not 'Preview'" during downloading from google drive.*
-
-*Note 2: tools_gcc-4.9.4.tar.gz is a cross compile gcc for Raspberry PI and is a custom compiled compiler. Please refer to rpi_rootfs/raspi_gcc_4.9.4.ct-ng.config for more tools_gcc_4.9_4 specs.*
-
-
-|URL|SHA256sum|
-|----------------|---------------|
-|[tools_gcc-4.9.4.tar.gz](https://drive.google.com/open?id=0B4FN-EnejHTaLWVILVFkVTZteWM)|99e0aa822ff8bcdd3bbfe978466f2bed281001553f3b9c295eba2d6ed636d6c2|
-
-
-## Making Raspberry PI sysroot
+## Making Raspberry PI RootFS
 ```
 cd ~/Workspace/rpi_rootfs
 ./rpi_rootfs.py 
@@ -41,6 +14,29 @@ Usage: ./rpi_rootfs.py @hostname> <rootfs path>
 *When rpi_rootfs.py is executed, many messages are output to console during the sync list of files and library link fixing. Please ignore the messages.*
 
 If you installed a new library or software on Raspberry PI, please execute it again to apply the changed part.
+
+## Custom Compiled GCC for Raspberry PI
+
+```
+mkdir -p ~/Workspace
+git clone https://github.com/kclyu/rpi_rootfs
+cd rpi_rootfs
+mkdir tools
+cd tools
+# (Download Custom Compiled GCC) # note1
+xz -dc ~/Downloads/gcc-linaro-6.4.1-2017.01-x86_64_arm-linux-gnueabihf.tar.xz  | tar xvf -
+ln -sf gcc-linaro-6.4.1-2017.01-x86_64_arm-linux-gnueabihf  arm-linux-gnueabihf
+cd /opt
+sudo ln -sf ~/Workspace/rpi_rootfs
+export PATH=/opt/rpi_rootfs/tools/arm-linux-gnueabihf/bin:$PATH
+```
+*Note 1: Custom Compiled GCC : Please click  gcc-linaro-6.4.1-2017.01-x86_64_arm-linux-gnueabihf.tar.xz link to download it. Because of the large file size, google drive link is available for download. You may get a warning message that "file size is too large to scan for viruses" and "You can not 'Preview'" during downloading from google drive.*
+
+
+|URL|SHAsum|Remarks|
+|----------------|---------------|------------|
+|[gcc-linaro-6.4.1-2017.01-x86_64_arm-linux-gnueabihf.tar.xz](https://drive.google.com/open?id=1s67nRSYZtLkIlRDz-BsDPkBXaTA94tsZ)|1e9aa3bac3d864f514f7fae8b2b4cdf3747e5681|RASPBIAN STRETCH|
+
 
 ## Cross Compiling Examples
 The example below is based on the installation of rpi_rootfs and custom compiled gcc. Please use as needed.
@@ -79,3 +75,7 @@ cmake -DCMAKE_TOOLCHAIN_FILE=~/Workspace/rpi_rootfs/PI.cmake  .. -DENABLE_CXX11=
 make
 ```
 
+## Cross Compile WebRTC native code package
+
+Please refer to [README_building.md document](https://github.com/kclyu/rpi-webrtc-streamer/blob/master/README_building.md) document of Rpi-WebRTC-Streamer for WebRTC native code package Cross Compile method.
+ 

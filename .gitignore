@@ -3,13 +3,9 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+# 
+TODO.txt
 
-# Flask stuff:
-instance/
-.webassets-cache
-
-# Sphinx documentation
-docs/_build/
 
 # pyenv
 .python-version

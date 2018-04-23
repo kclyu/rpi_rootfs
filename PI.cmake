@@ -65,29 +65,23 @@ SET(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -ldl"  CACHE INTERNAL "" F
 
 ##
 ## Compiler Binary 
-# rpi_tools gcc 4.7.1
-#SET(RPI_TOOLS_BASE /opt/rpi_tools/arm-bcm2708/arm-bcm2708-linux-gnueabi)
-#SET(BIN_PREFIX arm-bcm2708-linux-gnueabi)
-
-# Custom build GCC  (gcc 4.9.4)
-SET(RPI_TOOLS_BASE $ENV{HOME}/tools/rpi_tools/arm-linux-gnueabihf)
 SET(BIN_PREFIX arm-linux-gnueabihf)
 
-SET (CMAKE_C_COMPILER ${RPI_TOOLS_BASE}/bin/${BIN_PREFIX}-gcc)
-SET (CMAKE_CXX_COMPILER ${RPI_TOOLS_BASE}/bin/${BIN_PREFIX}-g++ )
-SET (CMAKE_LINKER ${RPI_TOOLS_BASE}/bin/${BIN_PREFIX}-ld 
+SET (CMAKE_C_COMPILER ${BIN_PREFIX}-gcc)
+SET (CMAKE_CXX_COMPILER ${BIN_PREFIX}-g++ )
+SET (CMAKE_LINKER ${BIN_PREFIX}-ld 
             CACHE STRING "Set the cross-compiler tool LD" FORCE)
-SET (CMAKE_AR ${RPI_TOOLS_BASE}/bin/${BIN_PREFIX}-ar 
+SET (CMAKE_AR ${BIN_PREFIX}-ar 
             CACHE STRING "Set the cross-compiler tool AR" FORCE)
-SET (CMAKE_NM ${RPI_TOOLS_BASE}/bin/${BIN_PREFIX}-nm 
+SET (CMAKE_NM {BIN_PREFIX}-nm 
             CACHE STRING "Set the cross-compiler tool NM" FORCE)
-SET (CMAKE_OBJCOPY ${RPI_TOOLS_BASE}/bin/${BIN_PREFIX}-objcopy 
+SET (CMAKE_OBJCOPY ${BIN_PREFIX}-objcopy 
             CACHE STRING "Set the cross-compiler tool OBJCOPY" FORCE)
-SET (CMAKE_OBJDUMP ${RPI_TOOLS_BASE}/bin/${BIN_PREFIX}-objdump 
+SET (CMAKE_OBJDUMP ${BIN_PREFIX}-objdump 
             CACHE STRING "Set the cross-compiler tool OBJDUMP" FORCE)
-SET (CMAKE_RANLIB ${RPI_TOOLS_BASE}/bin/${BIN_PREFIX}-ranlib 
+SET (CMAKE_RANLIB ${BIN_PREFIX}-ranlib 
             CACHE STRING "Set the cross-compiler tool RANLIB" FORCE)
-SET (CMAKE_STRIP ${RPI_TOOLS_BASE}/bin/${BIN_PREFIX}-strip 
+SET (CMAKE_STRIP {BIN_PREFIX}-strip 
             CACHE STRING "Set the cross-compiler tool RANLIB" FORCE)
 
 ##

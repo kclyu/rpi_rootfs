@@ -31,6 +31,8 @@ cmake_minimum_required(VERSION 3.0.0 FATAL_ERROR)
 
 SET(CMAKE_SYSTEM_NAME Linux)
 SET(CMAKE_SYSTEM_PROCESSOR arm)
+SET(CMAKE_SYSTEM_VERSION 1)
+SET(triple arm-linux-gnueabihf)
 
 ## Target Sysroot environment
 SET(CMAKE_SYSROOT $ENV{HOME}/Workspace/rpi_rootfs )
@@ -90,7 +92,7 @@ SET (BOOST_ROOT  ${CMAKE_SYSROOT}/usr/local/boost)
 SET (BOOST_LIBRARYDIR  ${CMAKE_SYSROOT}/usr/local/boost/lib)
 
 add_definitions("-DBOOST_COROUTINES_NO_DEPRECATION_WARNING")
-add_compile_options(-mfpu=neon-vfpv4 -mfloat-abi=hard -funsafe-math-optimizations)
+#add_compile_options(-mfpu=neon-vfpv4 -mfloat-abi=hard -funsafe-math-optimizations)
 
 SET(OPENSSL_FOUND TRUE)
 SET(OPENSSL_ROOT_DIR ${CMAKE_SYSROOT}/usr/include/openssl)

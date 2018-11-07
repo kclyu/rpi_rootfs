@@ -18,3 +18,6 @@ lib/systemd
 usr/lib/aspell/
 usr/lib/ssl
 usr/lib/cups/
+usr/lib/chromium-browser
+usr/lib/electron
+usr/lib/scratch2

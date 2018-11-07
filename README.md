@@ -24,8 +24,8 @@ cd rpi_rootfs
 mkdir tools
 cd tools
 # (Download Custom Compiled GCC) # note1
-xz -dc ~/Downloads/gcc-linaro-6.4.1-2017.01-x86_64_arm-linux-gnueabihf.tar.xz  | tar xvf -
-ln -sf gcc-linaro-6.4.1-2017.01-x86_64_arm-linux-gnueabihf  arm-linux-gnueabihf
+xz -dc ~/Downloads/gcc-linaro-6.4.1-2018.10-x86_64_arm-linux-gnueabihf.tar.xz | tar xvf -
+ln -sf gcc-linaro-6.4.1-2018.10-x86_64_arm-linux-gnueabihf  arm-linux-gnueabihf
 cd /opt
 sudo ln -sf ~/Workspace/rpi_rootfs
 export PATH=/opt/rpi_rootfs/tools/arm-linux-gnueabihf/bin:$PATH
@@ -35,7 +35,7 @@ export PATH=/opt/rpi_rootfs/tools/arm-linux-gnueabihf/bin:$PATH
 
 |URL|SHAsum|Remarks|
 |----------------|---------------|------------|
-|[gcc-linaro-6.4.1-2017.01-x86_64_arm-linux-gnueabihf.tar.xz](https://drive.google.com/open?id=1s67nRSYZtLkIlRDz-BsDPkBXaTA94tsZ)|1e9aa3bac3d864f514f7fae8b2b4cdf3747e5681|RASPBIAN STRETCH|
+|[gcc-linaro-6.4.1-2018.10-x86_64_arm-linux-gnueabihf.tar.xz](https://drive.google.com/open?id=1s67nRSYZtLkIlRDz-BsDPkBXaTA94tsZ)|2b88b6c619e0b28f6493e1b7971c327574ffdb36|RASPBIAN STRETCH|
 
 
 ## Cross Compiling Examples

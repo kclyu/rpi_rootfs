@@ -30,8 +30,7 @@ cd /opt
 sudo ln -sf ~/Workspace/rpi_rootfs
 export PATH=/opt/rpi_rootfs/tools/arm-linux-gnueabihf/bin:$PATH
 ```
-*Note 1: Custom Compiled GCC : Please click  gcc-linaro-6.4.1-2017.01-x86_64_arm-linux-gnueabihf.tar.xz link to download it. Because of the large file size, google drive link is available for download. You may get a warning message that "file size is too large to scan for viruses" and "You can not 'Preview'" during downloading from google drive.*
-
+*Note 1: Custom Compiled GCC : Please click  gcc-linaro-6.4.1-2018.10-x86_64_arm-linux-gnueabihf.tar.xz link to download it. Because of the large file size, google drive link is available for download. You may get a warning message that "file size is too large to scan for viruses" and "You can not 'Preview'" during downloading from google drive.*
 
 |URL|SHAsum|Remarks|
 |----------------|---------------|------------|

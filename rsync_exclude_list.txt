@@ -21,3 +21,4 @@ usr/lib/cups/
 usr/lib/chromium-browser
 usr/lib/electron
 usr/lib/scratch2
+usr/lib/pypy

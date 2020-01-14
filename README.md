@@ -7,9 +7,10 @@ This Repo provide google Drive Link to download Custom Compiled GCC. If you are 
 ## Making Raspberry PI RootFS
 ```
 cd ~/Workspace/rpi_rootfs
+mkdir -p rootfs
 ./rpi_rootfs.py 
 Usage: ./rpi_rootfs.py @hostname> <rootfs path>
-./rpi_rootfs.py pi@your-raspberry-pi-ipaddress ./
+./rpi_rootfs.py pi@your-raspberry-pi-ipaddress rootfs
 ```
 *When rpi_rootfs.py is executed, many messages are output to console during the sync list of files and library link fixing. Please ignore the messages.*
 

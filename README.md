@@ -1,10 +1,32 @@
 # RootFS for Raspberry PI
-This Repo creates a Cross Compile environment for Raspberry PI by generating Root FS for Raspberry PI on Ubuntu Linux using python.
-This Repo is used to cross compile the WebRTC native code package for use with Rpi-WebRTC-Streamer. For an example of compiling OpenCV and ffmpeg, see the `Cross Compiling Examples` section below.
+This repo provides tools to create rootfs so that you can create a cross compile environment for Raspberry PI on Ubuntu Linux using bash script and python.
 
-This Repo provide google Drive Link to download Custom Compiled GCC. If you are not familiar with cross compile and do not have your own cross compile environment, please download and use GCC from `Custom Compiled GCC for Raspberry PI` below.
+There are two ways to create rootfs. The first is to create a rootfs directly using a Raspbian OS image file. The other way is to create a rootfs using rsync from the Raspberry PI hardware you're already running.
 
-## Making Raspberry PI RootFS
+And, this repo provide google Drive Link to download Custom Compiled GCC. If you are not familiar with cross compiler and do not have your own cross compiler, please download and use GCC from `Custom Compiled GCC for Raspberry PI` below.
+
+For an example of compiling OpenCV and ffmpeg, see the `Cross Compiling Examples` section below.
+
+
+## Making RootFS with Raspbian OS image file
+```
+cd ~/Workspace/rpi_rootfs
+sudo ./build_rootfs.sh
+[sudo] password for kclyu: 
+Usage: ./build_rootfs.sh cmd [options]
+  cmd: 
+    create [image file]: 
+		[image file]: raspbian OS image zip/img file
+    cmd [command]:
+		[command]: should be escaped with double-quote and 
+		  command need to be full path of command 
+		  e.g. sudo ./build_rootfs.sh cmd "/usr/bin/apt autoremove"
+    clean : removing rootfs
+
+sudo ./build_rootfs.sh create ./2019-09-26-raspbian-buster.img  # note1
+```
+*note1 : Download the image file from [Raspberry PI download page](https://www.raspberrypi.org/downloads/raspbian/) and if possible, use the img file after unzip the zip file.*
+## Making RootFS with rsync 
 ```
 cd ~/Workspace/rpi_rootfs
 mkdir -p rootfs
@@ -19,19 +41,19 @@ If you installed a new library or software on Raspberry PI, please execute it ag
 ## Custom Compiled GCC for Raspberry PI
 
 ```
-mkdir -p ~/Workspace
-git clone https://github.com/kclyu/rpi_rootfs
-cd rpi_rootfs
+cd ~/Workspace/rpi_rootfs
 mkdir tools
 cd tools
-# (Download Custom Compiled GCC) # note1
-xz -dc ~/Downloads/gcc-linaro-8.3.0-2019.03-x86_64_arm-linux-gnueabihf.tar.xz  | tar xvf -
+../scripts/gdrive_download.sh 1q7Zk-7NhVROrBBWVgm56PbndZauSZL27 gcc-linaro-8.3.0-2019.03-x86_64_arm-linux-gnueabihf.tar.xz
+#...
+#Saving to: ‘gcc-linaro-8.3.0-2019.03-x86_64_arm-linux-gnueabihf.tar.xz’
+#...
+xz -dc gcc-linaro-8.3.0-2019.03-x86_64_arm-linux-gnueabihf.tar.xz  | tar xvf -
 ln -sf gcc-linaro-8.3.0-2019.03-x86_64_arm-linux-gnueabihf  arm-linux-gnueabihf
 cd /opt
 sudo ln -sf ~/Workspace/rpi_rootfs
 export PATH=/opt/rpi_rootfs/tools/arm-linux-gnueabihf/bin:$PATH
 ```
-_Note 1: Custom Compiled GCC : Please click gcc-linaro-8.3.0-2019.03-x86_64_arm-linux-gnueabihf.tar.xz link to download it. Because of the large file size, google drive link is available for download. You may get a warning message that "file size is too large to scan for viruses" and "You can not 'Preview'" during downloading from google drive._
 
 | URL| md5sum | Remarks|
 | -------------------------------------------------------------------------------------------------------------------------------- | -------------------------------- | --------------- |
@@ -77,5 +99,5 @@ make
 
 ## Cross Compile WebRTC native code package
 
-Please refer to [README_building.md document](https://github.com/kclyu/rpi-webrtc-streamer/blob/master/README_building.md) document of Rpi-WebRTC-Streamer for WebRTC native code package Cross Compile method.
+Please refer to [README_building.md document](https://github.com/kclyu/rpi-webrtc-streamer/blob/master/README_building.md) document of Rpi-WebRTC-Streamer for WebRTC native code package Cross Compile.
  

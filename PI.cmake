@@ -35,7 +35,7 @@ SET(CMAKE_SYSTEM_VERSION 1)
 SET(triple arm-linux-gnueabihf)
 
 ## Target Sysroot environment
-SET(CMAKE_SYSROOT $ENV{HOME}/Workspace/rpi_rootfs )
+SET(CMAKE_SYSROOT $ENV{HOME}/Workspace/rpi_rootfs/rootfs )
 SET(CMAKE_FIND_ROOT_PATH ${CMAKE_SYSROOT})
 
 ## Add rpath flags for OpenCV

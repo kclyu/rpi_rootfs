@@ -18,6 +18,8 @@ rsync_cmd = ['/usr/bin/rsync']
 #        '--include=usr/share/pkg*' ]
 rsync_options = ['-rRlvu', '--stats',  '--delete-after' ]
 
+EXCLUDE_PATH_PATTERN=r'/proc/*|/dev/*'
+
 ################################################################################
 #
 # Rsync
@@ -92,10 +94,11 @@ def relativelinks_handlelink(topdir, filep, subdir):
 
 
 def process_relativelinks(path):
-
     topdir = os.path.abspath(path)
 
     for subdir, dirs, files in os.walk(topdir):
+        if any(re.findall(EXCLUDE_PATH_PATTERN, subdir, re.IGNORECASE)):
+            continue
         for f in files:
             filep = os.path.join(subdir, f)
             if os.path.islink(filep):
@@ -132,44 +135,6 @@ def process_pkgconfig_link(path):
                 print("source %s target %s" % (target_packageconfig, link_packageconfig))
                 symlink_force(target_packageconfig, link_packageconfig)
                 
-    else:
-        sys.stderr.write('ERROR: pkg-config does not exist : %r\n\n' % pkgconfig_path)
-
-################################################################################
-#
-# making include/sys links
-#
-################################################################################
-
-def process_sys_include_link(path):
-    # 
-    sys_include_link_path  = os.path.abspath(path)+'/usr/include/arm-linux-gnueabihf/sys'
-    if(os.path.exists(sys_include_link_path)):
-        for subdir, dirs, files in os.walk(sys_include_link_path):
-            print ("SUBDIR : %s" % subdir )
-            print ("SUBDIR : %s" % dirs )
-            for f in files:
-                filep = os.path.join(subdir, f)
-                target_sys_include = "../arm-linux-gnueabihf/sys/" + f
-                link_sys_include =  os.path.abspath(path) + "/usr/include/sys/" + f
-                print("source %s target %s" % (target_sys_include, link_sys_include))
-                symlink_force(target_sys_include, link_sys_include)
-    else:
-        sys.stderr.write('ERROR: pkg-config does not exist : %r\n\n' % pkgconfig_path)
-
-def process_include_link(path):
-    include_link_path  = os.path.abspath(path)+'/usr/include/arm-linux-gnueabihf'
-    if(os.path.exists(include_link_path)):
-        for subdir, dirs, files in os.walk(include_link_path):
-            print ("SUBDIR : %s" % subdir )
-            print ("DIRS : %s" % dirs )
-            print ("FILES : %s" % dirs )
-            #for f in files:
-            #    filep = os.path.join(subdir, f)
-            #    target_sys_include = "../arm-linux-gnueabihf/sys/" + f
-            #    link_sys_include =  os.path.abspath(path) + "/usr/include/sys/" + f
-            #    print("source %s target %s" % (target_sys_include, link_sys_include))
-            #    #symlink_force(target_sys_include, link_sys_include)
     else:
         sys.stderr.write('ERROR: pkg-config does not exist : %r\n\n' % pkgconfig_path)
 
@@ -242,52 +207,70 @@ def process_ld_scripts(path):
 
 ################################################################################
 #
+# ld.so.preload fixing
+#
+################################################################################
+process_ld_so_preload_command = [ '/bin/grep', '-rl', '--exclude=*', 
+        '--include=*.preload', '{PLATFORM}', '*' ]
+def process_ld_so_preload(path):
+    grep_command = ' '.join(process_ld_so_preload_command)
+    proc = subprocess.Popen(grep_command,stdout=subprocess.PIPE, shell=True)
+    for line in proc.stdout:
+        # replacing to 'v7l'
+        inplace_change(line.strip(), '${PLATFORM}', 'v7l')
+
+################################################################################
+#
 # Main Function
 #
 ################################################################################
 def main(argv):
     if len(argv) != 3:
-        sys.stderr.write('Usage: ' + argv[0] + ' <user@hostname> <rootfs path>\n')
+        sys.stderr.write(
+                'Usage: ' + argv[0] + ' [<user@hostname>|local] <rootfs path>\n')
+        sys.stderr.write(
+                '\tuser@hostname : Rpi host address and user information for rcp connection\n')
+        sys.stderr.write(
+                '\tlocal : Performs fixing processes without image copying.\n')
         return 1
 
     if not sys.platform.startswith('linux'):
         sys.stderr.write('RPi RootFS does not support this platform: %r\n\n' % sys.platform)
         return 1
 
-    #process_sys_include_link(argv[2])
-    #process_include_link(argv[2])
-    #return 1
+    sync_image_url = argv[1]
+    rootfs_path = argv[2];
 
-    print("################################################################################")
-    print("###\n### rootfs syncing from %s\n###" % argv[1] )
-    print("################################################################################")
-    ret = process_rsync_rootfs(argv[1], argv[2])
-    if ret != 0:
-        ## Failed to rsync the remote file system, aborting!
-        return ret
+    if sync_image_url != 'local':
+        print("################################################################################")
+        print("###\n### rootfs syncing from %s\n###" % argv[1] )
+        print("################################################################################")
+        ret = process_rsync_rootfs(sync_image_url, rootfs_path)
+        if ret != 0:
+            ## Failed to rsync the remote file system, aborting!
+            return ret
 
     print("################################################################################")
     print("###\n### fixing absolute links\n###" )
     print("################################################################################")
-    process_relativelinks(argv[2])
+    process_relativelinks(rootfs_path);
 
     print("################################################################################")
     print("###\n### linking pkgconfig on /usr/share/pkginfo \n###" )
     print("################################################################################")
-    process_pkgconfig_link(argv[2])
+    process_pkgconfig_link(rootfs_path);
 
     print("################################################################################")
     print("###\n### fixing ld scripts absolute path to relative path \n###" )
     print("################################################################################")
-    process_ld_scripts(argv[2])
+    process_ld_scripts(rootfs_path);
 
-    #print("################################################################################")
-    #print("###\n### linking include/sys file  \n###" )
-    #print("################################################################################")
-    #process_sys_include_link(argv[2])
+    print("################################################################################")
+    print("###\n### fixing ld.so.preload \n###" )
+    print("################################################################################")
+    process_ld_so_preload(rootfs_path);
 
 if __name__ == '__main__':
     sys.exit(main(sys.argv))
-
 
 

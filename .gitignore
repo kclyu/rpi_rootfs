@@ -6,7 +6,6 @@ __pycache__/
 # 
 TODO.txt
 
-
 # pyenv
 .python-version
 
@@ -22,3 +21,4 @@ lib/
 opt/
 usr/
 tools/
+rootfs

@@ -70,6 +70,7 @@ function extract_zip_and_mount_image {
 
 	## Extracting Raspbian OS image from zip file
 	if [ ${extension} == "zip" ]; then 
+		# this unzip wll extract the OS image file on current directory
 		unzip ${image_filename}
 		ret_value=$?
 		echo "Unzip Resutnr value : ${ret_value}"
@@ -77,14 +78,17 @@ function extract_zip_and_mount_image {
 			echo "Error: Failed to execute unzip ${image_filename}"
 			exit 1;
 		fi
-	elif [ ${extension} != "img" ]; then 
+	elif [ ${extension} == "img" ]; then
+		extracted_image_filename=${image_filename}
+		echo "Using OS image file : ${extracted_image_filename}"
+	else
 		echo "Error: unsuppored Raspbian OS image type ${image_filename}"
 		exit 2;
 	fi
 
 	## Extracting the mount offset of Raspbian OS image
 	if [ ! -e ${extracted_image_filename} ]; then
-		echo "Raspbian OS raw image file does not exist in zip file"
+		echo "Raspbian OS raw image file does not exist in current directory"
 		exit 1
 	fi
 

@@ -7,6 +7,7 @@
 function print_usage {
     echo "Usage: $0 cmd [options]"
 	echo "  cmd: "
+	echo "    download : download latest Raspbian OS image"
 	echo "    create [image file]: "
 	echo "		[image file]: raspbian OS image zip/img file"
 	echo "    cmd [command]:"
@@ -14,6 +15,7 @@ function print_usage {
 	echo "		  command need to be full path of command "
 	echo "		  e.g. sudo ./build_rootfs.sh cmd \"/usr/bin/apt autoremove\""
 	echo "    clean : removing rootfs"
+	echo "    docker : build rpi_rootfs docker image"
 }
 
 # Global variables for this script
@@ -25,6 +27,12 @@ QEMU_ARM_STATIC=/usr/bin/qemu-arm-static
 RSYNC_OPTIONS="-hatr --delete --stats"
 UPDATE_INSTALL_SCRIPT=update_upgrade_install_package.sh
 CURRENT_WORKING_DIR=""
+
+# for docker build
+DOCKER_BUILD_DIR="Docker"
+DOCKER_ROOTFS_TAR="../${DOCKER_BUILD_DIR}/rootfs.tar"
+DOCKER_TAR_OPTIONS="-X ../tar_exclude_list.txt -T ../tar_include_list.txt"
+GDRIVE_DL_SCRIPT="scripts/gdrive_download.sh"
 
 ###############################################################################
 # 
@@ -70,6 +78,7 @@ function extract_zip_and_mount_image {
 
 	## Extracting Raspbian OS image from zip file
 	if [ ${extension} == "zip" ]; then 
+		# this unzip wll extract the OS image file on current directory
 		unzip ${image_filename}
 		ret_value=$?
 		echo "Unzip Resutnr value : ${ret_value}"
@@ -77,14 +86,17 @@ function extract_zip_and_mount_image {
 			echo "Error: Failed to execute unzip ${image_filename}"
 			exit 1;
 		fi
-	elif [ ${extension} != "img" ]; then 
+	elif [ ${extension} == "img" ]; then
+		extracted_image_filename=${image_filename}
+		echo "Using OS image file : ${extracted_image_filename}"
+	else
 		echo "Error: unsuppored Raspbian OS image type ${image_filename}"
 		exit 2;
 	fi
 
 	## Extracting the mount offset of Raspbian OS image
 	if [ ! -e ${extracted_image_filename} ]; then
-		echo "Raspbian OS raw image file does not exist in zip file"
+		echo "Raspbian OS raw image file does not exist in current directory"
 		exit 1
 	fi
 
@@ -161,17 +173,59 @@ function create_rootfs {
 		exit 5
 	fi
 
+	mkdir -p ${RPI_ROOTFS_BASE} 
 	extract_zip_and_mount_image ${image_filename}
 	copy_files_from_image 
 	update_and_install_raspbian_os_imsage
 }
 
-function is_rootfs_exist {
+function create_rootfs_tar_for_dockerbuild {
+	rm -f ${DOCKER_ROOTFS_TAR};
+	echo "Creating rootfs.tar in  ${DOCKER_ROOTFS_TAR}"
+	(
+		cd ${RPI_ROOTFS_BASE};
+		tar cf ${DOCKER_ROOTFS_TAR} ${DOCKER_TAR_OPTIONS};
+		local ret_value=$?
+		if [ ${ret_value} -ne 0 ]; then 
+			echo "Error: Failed to create rootfs.tar"
+			exit 4;
+		fi
+	)
+}
+
+function build_docker_image {
+	echo "Building Docker image"
+	(
+		cd ${DOCKER_BUILD_DIR};
+		local ret_value=$?
+		docker build --rm -t rpi_rootfs:0.74 .
+		if [ ${ret_value} -ne 0 ]; then 
+			echo "Error: Failed to build docker image"
+			exit 4;
+		fi
+	)
+}
+
+
+## Building Docker image
+function create_rootfs_and_build_docker_image {
+	create_rootfs_tar_for_dockerbuild
+	cp -f scripts/gdrive_download.sh ${DOCKER_BUILD_DIR}
+	build_docker_image
+}
+
+function rootfs_must_not_exist {
 	if [ -e ${RPI_ROOTFS_BASE} ]; then
 		echo "rootfs already exist, remove rootfs if you want to create new one"
 		exit 6
 	fi
-	mkdir ${RPI_ROOTFS_BASE} 
+}
+
+function rootfs_must_exist {
+	if [ ! -e ${RPI_ROOTFS_BASE} ]; then
+		echo "rootfs does not exist, you need to build rootfs at first"
+		exit 6
+	fi
 }
 
 function clean_rootfs {
@@ -201,14 +255,21 @@ is_command_installed rsync
 is_command_installed qemu-arm-static	# qemu-user-static package
 CURRENT_WORKING_DIR=${PWD}
 
-if [ ${args[0]} == "create" ]; then
-	is_rootfs_exist		# exit this script when the rootfs exists
+if [ ${args[0]} == "download" ]; then
+	is_command_installed wget
+	wget --trust-server-names https://downloads.raspberrypi.org/raspbian_latest
+elif [ ${args[0]} == "create" ]; then
+	rootfs_must_not_exist		# exit this script when the rootfs exists
 	create_rootfs ${args[1]} 
 elif [ ${args[0]} == "clean" ]; then
 	clean_rootfs
 elif [ ${args[0]} == "cmd" ]; then
 	shift 
 	run_chroot_command "$@"
+elif [ ${args[0]} == "docker" ]; then
+	is_command_installed docker	 # check docker command is available
+	rootfs_must_exist		# exit this script when the rootfs does not exist
+	create_rootfs_and_build_docker_image
 else
 	echo "command not found : ${args[0]}"
 	print_usage

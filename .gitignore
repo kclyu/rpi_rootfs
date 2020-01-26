@@ -24,3 +24,4 @@ tools/
 rootfs
 Docker/rootfs.tar
 Docker/gdrive_download.sh
+Docker/PI.cmake

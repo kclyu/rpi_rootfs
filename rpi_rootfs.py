@@ -60,8 +60,8 @@ def rsync_get_include_option(user):
 def process_rsync_rootfs(user, path):
     # Building rsync command line
     rsync_full_command = rsync_cmd + rsync_options  + \
-            ["--include-from=rsync_include_list.txt"] + \
-            ["--exclude-from=rsync_exclude_list.txt"] + \
+            ["--include-from=data/rsync_include_list.txt"] + \
+            ["--exclude-from=data/rsync_exclude_list.txt"] + \
             [rsync_get_include_option(user)] + [path]
     print(rsync_full_command)
     ret = subprocess.call(rsync_full_command, shell=False)

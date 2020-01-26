@@ -31,7 +31,7 @@ CURRENT_WORKING_DIR=""
 # for docker build
 DOCKER_BUILD_DIR="Docker"
 DOCKER_ROOTFS_TAR="../${DOCKER_BUILD_DIR}/rootfs.tar"
-DOCKER_TAR_OPTIONS="-X ../tar_exclude_list.txt -T ../tar_include_list.txt"
+DOCKER_TAR_OPTIONS="-X ../data/tar_exclude_list.txt -T ../data/tar_include_list.txt"
 GDRIVE_DL_SCRIPT="scripts/gdrive_download.sh"
 
 ###############################################################################

@@ -211,6 +211,7 @@ function build_docker_image {
 function create_rootfs_and_build_docker_image {
 	create_rootfs_tar_for_dockerbuild
 	cp -f scripts/gdrive_download.sh ${DOCKER_BUILD_DIR}
+	cp -f PI.cmake ${DOCKER_BUILD_DIR}
 	build_docker_image
 }
 

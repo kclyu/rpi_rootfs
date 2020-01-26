@@ -16,8 +16,9 @@ LABEL description="Rootfs creation tool for Raspberry PI \
 
 # Making rootfs
 ENV HOME /root/
-ENV RPI_ROOTFS /root/Workspace/rpi_rootfs/rootfs
-ENV RPI_TOOLS /root/Workspace/rpi_rootfs/tools
+ENV RPI_ROOTFS_BASE /root/Workspace/rpi_rootfs
+ENV RPI_ROOTFS ${RPI_ROOTFS_BASE}/rootfs
+ENV RPI_TOOLS ${RPI_ROOTFS_BASE}/tools
 RUN apt update &&  apt install -y git \
    wget \ 
    xz-utils \
@@ -27,6 +28,7 @@ RUN apt update &&  apt install -y git \
    gawk
 
 RUN mkdir -p ${RPI_ROOTFS}
+ADD /PI.cmake ${RPI_ROOTFS_BASE}
 # The rootfs for docker uses tarball that exclude files not used 
 # in gcc compilation, such as binaries, python, perl to reduce 
 # the amount of disk space used.
@@ -35,6 +37,7 @@ ADD /rootfs.tar ${RPI_ROOTFS}
 #  Download Custom Compiled GCC from Google Drive
 RUN mkdir -p ${RPI_TOOLS}
 ADD ./gdrive_download.sh ${RPI_TOOLS}
+ADD ./PI.cmake ${RPI_TOOLS}
 ENV GCC_VERION gcc-linaro-8.3.0-2019.03-x86_64_arm-linux-gnueabihf
 ENV GCC_DOWNLOAD ${GCC_VERSION}.tar.xz
 WORKDIR ${RPI_TOOLS}

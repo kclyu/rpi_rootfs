@@ -197,9 +197,9 @@ def fix_process_ld_scripts(path, filename):
                         inplace_change(filename, item, relpath)
 
 
-process_ld_scripts_command = [ '/bin/grep', '-rl', '--exclude=*', '--include=*.so', '\"GNU ld script\"', '*' ]
+process_ld_scripts_command = [ '/bin/grep', '-rl', '--exclude=*', '--include=*.so', '\"GNU ld script\"', '{}' ]
 def process_ld_scripts(path):
-    grep_command = ' '.join(process_ld_scripts_command)
+    grep_command = ' '.join(process_ld_scripts_command).format(path)
     proc = subprocess.Popen(grep_command,stdout=subprocess.PIPE, shell=True)
     for line in proc.stdout:
         #the real code does filtering here
@@ -211,9 +211,9 @@ def process_ld_scripts(path):
 #
 ################################################################################
 process_ld_so_preload_command = [ '/bin/grep', '-rl', '--exclude=*', 
-        '--include=*.preload', '{PLATFORM}', '*' ]
+        '--include=*.preload', '{}', '{}' ]
 def process_ld_so_preload(path):
-    grep_command = ' '.join(process_ld_so_preload_command)
+    grep_command = ' '.join(process_ld_so_preload_command).format('{PLATFORM}',path)
     proc = subprocess.Popen(grep_command,stdout=subprocess.PIPE, shell=True)
     for line in proc.stdout:
         # replacing to 'v7l'

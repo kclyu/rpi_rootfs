@@ -11,21 +11,25 @@ For an example of compiling OpenCV and ffmpeg, see the `Cross Compiling Examples
 ## Making RootFS with Raspbian OS image file
 ```
 cd ~/Workspace/rpi_rootfs
-sudo ./build_rootfs.sh
-[sudo] password for kclyu: 
-Usage: ./build_rootfs.sh cmd [options]
-  cmd: 
-    create [image file]: 
-		[image file]: raspbian OS image zip/img file
-    cmd [command]:
-		[command]: should be escaped with double-quote and 
-		  command need to be full path of command 
-		  e.g. sudo ./build_rootfs.sh cmd "/usr/bin/apt autoremove"
+./build_rootfs.sh
+Usage: .//build_rootfs.sh command [options]
+  command:
+    download : download latest RaspiOS image
+    create [image file]:
+      [image file]: raspi OS image zip/img file
+    update : run apt update & full-upgrade & autoremove in rootfs
+    run [command]: run raspberry pi command in rootfs
+      [command]: should be escaped with double-quote and
+      command need to be full path of command
+      e.g. ./build_rootfs.sh run "/usr/bin/apt -y libpulse-dev"
+        - install libpulse-dev package in rootfs
+      e.g. ./build_rootfs.sh run "/usr/bin/apt autoremove"
+        - run apt autoremove in rootfs
     clean : removing rootfs
-
-sudo ./build_rootfs.sh create ./2019-09-26-raspbian-buster.img  # note1
+    docker : build rpi_rootfs docker image
+./build_rootfs.sh create ./2020-MM-DD-raspios-buster-armhf.img  # note1
 ```
-*note1 : Download the image file from [Raspberry PI download page](https://www.raspberrypi.org/downloads/raspbian/) and if possible, use the img file after unzip the zip file.*
+*note1 : Download the image file from [Raspberry PI download page](https://www.raspberrypi.org/downloads/raspberry-pi-os/) and if possible, use the img file after unzip the img.zip file after download completed.*
 ## Making RootFS with rsync 
 ```
 cd ~/Workspace/rpi_rootfs
